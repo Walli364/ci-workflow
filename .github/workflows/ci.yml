@@ -26,15 +26,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Install serve
-        run: npm install -g serve
       - name: Start Server and Verify
         run: |
           echo "Starting app on localhost:8080..."
-          serve -l 8080 &
-          SERVER_PID=$!
+          nohup npx -y serve -l 8080 > server.log 2>&1 &
           sleep 5
           echo "Checking if server is reachable..."
-          curl -f http://localhost:8080 || (echo "Server not reachable!" && kill $SERVER_PID && exit 1)
+          curl -f http://localhost:8080 --max-time 10 || (cat server.log && exit 1)
           echo "Server is reachable on localhost:8080!"
-          kill $SERVER_PID
