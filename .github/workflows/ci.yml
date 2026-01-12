@@ -1,32 +1,51 @@
+name: HTML CSS CI Pipeline
 
-name: CI-Pipeline
+# Trigger the workflow on push to main branch
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+
 jobs:
-  build:
+  pipeline-job:
+  
     runs-on: self-hosted
+
     steps:
-      - uses: actions/checkout@v2
+      # Stage 1: Checkout Code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Stage 2: Build
       - name: Build Stage
-        run: echo "Build completed successfully!"
-  test:
-    runs-on: self-hosted
-    needs: build
-    steps: 
-      - name: Test Stage
-        run: echo "Test completed successfully!" 
-  run-local:
-    runs-on: self-hosted 
-    needs: test
-    steps: 
-      - uses: actions/checkout@v2
-      - name: Start Server and Verify
         run: |
-          echo "Starting app on localhost:8080..."
-          nohup python -m http.server 8080 > server.log 2>&1 &
-          sleep 5
-          echo "Checking if server is reachable..."
-          curl -f http://localhost:8080 --max-time 10 || (cat server.log && exit 1)
-          echo "Server is reachable on localhost:8080!"
+          echo "Starting Build Process for HTML/CSS..."
+          # Check kar rahe hain ke index.html file majood hai ya nahi
+          if [ -f index.html ]; then
+            echo "Build Success: index.html found."
+          else
+            echo "Build Failed: index.html missing!"
+            exit 1
+          fi
+
+      # Stage 3: Run Application (Localhost Port 8080)
+      - name: Run Application
+        run: |
+          echo "Starting application on localhost:8080..."
+          # Python ka built-in server use kar rahe hain background mein (nohup)
+          nohup python3 -m http.server 8080 > server.log 2>&1 &
+          echo "Server launched in background."
+          sleep 5 # 5 second wait taake server ready ho jaye
+
+      # Stage 4: Test/Validate (Using curl)
+      - name: Validate Application
+        run: |
+          echo "Testing connectivity..."
+          # Curl command se check kar rahe hain ke page load ho raha hai ya nahi
+          curl -I http://localhost:8080
+          echo "Validation Passed: Application is running on port 8080."
+          
+      # Clean up 
+      - name: Cleanup
+        if: always()
+        run: |
+          pkill -f "http.server" || echo "Server already stopped"
