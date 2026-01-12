@@ -1,4 +1,4 @@
-# Write your CI workflow here
+
 name: CI-Pipeline
 on:
   push:
@@ -22,14 +22,10 @@ jobs:
     needs: test
     steps: 
       - uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20'
       - name: Start Server and Verify
         run: |
           echo "Starting app on localhost:8080..."
-          nohup npx -y serve -l 8080 > server.log 2>&1 &
+          nohup python -m http.server 8080 > server.log 2>&1 &
           sleep 5
           echo "Checking if server is reachable..."
           curl -f http://localhost:8080 --max-time 10 || (cat server.log && exit 1)
