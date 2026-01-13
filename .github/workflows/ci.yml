@@ -9,6 +9,9 @@ jobs:
   pipeline-job:
   
     runs-on: self-hosted
+    defaults:
+      run:
+        shell: bash
 
     steps:
       # Stage 1: Checkout Code
