@@ -35,7 +35,7 @@ jobs:
         run: |
           echo "Starting application on localhost:8080..."
           # Python ka built-in server use kar rahe hain background mein (nohup)
-          nohup python3 -m http.server 8080 > server.log 2>&1 &
+          nohup python -m http.server 8080 > server.log 2>&1 &
           echo "Server launched in background."
           sleep 5 # 5 second wait taake server ready ho jaye
 
