@@ -1,28 +1,28 @@
 name: HTML CSS CI Pipeline
 
-# Trigger on git push [cite: 70]
+# Trigger on git push
 on:
   push:
     branches: [ main ]
 
 jobs:
   pipeline-job:
-    # PDF Requirement: Runner must be self-hosted 
+    # Self-hosted runner 
     runs-on: self-hosted
     defaults:
       run:
         shell: bash
 
     steps:
-      # Stage 1: Checkout Code [cite: 12]
+      # Stage 1: Checkout Code
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Stage 2: Build (HTML ke liye files verify karna kaafi hai) [cite: 13]
+      # Stage 2: Build
       - name: Build Stage
         run: |
           echo "Starting Build Process for HTML/CSS..."
-          # Check kar rahe hain ke index.html file majood hai ya nahi
+          # checking if html exists 
           if [ -f index.html ]; then
             echo "Build Success: index.html found."
           else
@@ -34,12 +34,12 @@ jobs:
       - name: Run Application
         run: |
           echo "Starting application on localhost:8080..."
-          # Python ka built-in server use kar rahe hain background mein (nohup)
+          # using Python built-in server (nohup)
           nohup python3 -m http.server 8080 > server.log 2>&1 &
           echo "Server launched in background."
           sleep 5 # 5 second wait taake server ready ho jaye
 
-      # Stage 4: Test/Validate (Using curl) [cite: 14, 35]
+      # Stage 4: Test/Validate (Using curl)
       - name: Validate Application
         run: |
           echo "Testing connectivity..."
@@ -47,7 +47,7 @@ jobs:
           curl -I http://localhost:8080
           echo "Validation Passed: Application is running on port 8080."
           
-      # Clean up (Optional: Server ko stop karna taake port free ho jaye)
+      # Clean up (Optional)
       - name: Cleanup
         if: always()
         run: |
