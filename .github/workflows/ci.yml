@@ -39,7 +39,7 @@ jobs:
           echo "Server launched in background."
           sleep 5 # 5 second wait taake server ready ho jaye
 
-      # Stage 4: Test/Validate (Using curl)
+      # Stage 4: Test/Validate (Using Invoke-WebRequest)
       - name: Validate Application
         run: |
           echo "Testing connectivity..."
