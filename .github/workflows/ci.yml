@@ -30,12 +30,12 @@ jobs:
             exit 1
           fi
 
-      # Stage 3: Run Application (Localhost Port 8080)
+      # Stage 3: Run Application (Localhost Port 8888)
       - name: Run Application
         run: |
-          echo "Starting application on localhost:8080..."
+          echo "Starting application on localhost:8888..."
           # Python ka built-in server use kar rahe hain background mein (nohup)
-          nohup python -m http.server 8080 > server.log 2>&1 &
+          nohup python -m http.server 8888 > server.log 2>&1 &
           echo "Server launched in background."
           sleep 5 # 5 second wait taake server ready ho jaye
 
@@ -44,8 +44,8 @@ jobs:
         run: |
           echo "Testing connectivity..."
           # Curl command se check kar rahe hain ke page load ho raha hai ya nahi
-          curl -I http://localhost:8080
-          echo "Validation Passed: Application is running on port 8080."
+          curl -I http://localhost:8888
+          echo "Validation Passed: Application is running on port 8888."
           
       # Clean up 
       - name: Cleanup
