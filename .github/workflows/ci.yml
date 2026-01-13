@@ -1,27 +1,28 @@
 name: HTML CSS CI Pipeline
 
-# Trigger the workflow on push to main branch
+# Trigger on git push [cite: 70]
 on:
   push:
     branches: [ main ]
 
 jobs:
   pipeline-job:
-  
+    # PDF Requirement: Runner must be self-hosted 
     runs-on: self-hosted
     defaults:
       run:
-        shell: wsl.exe bash --noprofile --norc -e -o pipefail {0}
+        shell: bash
 
     steps:
-      # Stage 1: Checkout Code
+      # Stage 1: Checkout Code [cite: 12]
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Stage 2: Build
+      # Stage 2: Build (HTML ke liye files verify karna kaafi hai) [cite: 13]
       - name: Build Stage
         run: |
           echo "Starting Build Process for HTML/CSS..."
+          # Check kar rahe hain ke index.html file majood hai ya nahi
           if [ -f index.html ]; then
             echo "Build Success: index.html found."
           else
@@ -29,22 +30,24 @@ jobs:
             exit 1
           fi
 
-      # Stage 3: Run Application (Localhost Port 8888)
+      # Stage 3: Run Application (Localhost Port 8080) [cite: 16, 32]
       - name: Run Application
         run: |
-          echo "Starting application on localhost:8888..."
-          nohup python3 -m http.server 8888 > server.log 2>&1 &
+          echo "Starting application on localhost:8080..."
+          # Python ka built-in server use kar rahe hain background mein (nohup)
+          nohup python3 -m http.server 8080 > server.log 2>&1 &
           echo "Server launched in background."
-          sleep 5
+          sleep 5 # 5 second wait taake server ready ho jaye
 
-      # Stage 4: Test/Validate (Using curl)
+      # Stage 4: Test/Validate (Using curl) [cite: 14, 35]
       - name: Validate Application
         run: |
           echo "Testing connectivity..."
-          curl -I http://localhost:8888
-          echo "Validation Passed: Application is running on port 8888."
+          # Curl command se check kar rahe hain ke page load ho raha hai ya nahi
+          curl -I http://localhost:8080
+          echo "Validation Passed: Application is running on port 8080."
           
-      # Clean up 
+      # Clean up (Optional: Server ko stop karna taake port free ho jaye)
       - name: Cleanup
         if: always()
         run: |
