@@ -11,7 +11,7 @@ jobs:
     runs-on: self-hosted
     defaults:
       run:
-        shell: bash
+        shell: wsl.exe bash --noprofile --norc -e -o pipefail {0}
 
     steps:
       # Stage 1: Checkout Code
@@ -22,7 +22,6 @@ jobs:
       - name: Build Stage
         run: |
           echo "Starting Build Process for HTML/CSS..."
-          # Check kar rahe hain ke index.html file majood hai ya nahi
           if [ -f index.html ]; then
             echo "Build Success: index.html found."
           else
@@ -34,16 +33,14 @@ jobs:
       - name: Run Application
         run: |
           echo "Starting application on localhost:8888..."
-          # Python ka built-in server use kar rahe hain background mein (nohup)
-          nohup python -m http.server 8888 > server.log 2>&1 &
+          nohup python3 -m http.server 8888 > server.log 2>&1 &
           echo "Server launched in background."
-          sleep 5 # 5 second wait taake server ready ho jaye
+          sleep 5
 
-      # Stage 4: Test/Validate (Using Invoke-WebRequest)
+      # Stage 4: Test/Validate (Using curl)
       - name: Validate Application
         run: |
           echo "Testing connectivity..."
-          # Curl command se check kar rahe hain ke page load ho raha hai ya nahi
           curl -I http://localhost:8888
           echo "Validation Passed: Application is running on port 8888."
           
